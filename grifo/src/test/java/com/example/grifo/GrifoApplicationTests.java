@@ -1,4 +1,4 @@
-package com.grifo.grifo;
+package com.example.grifo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
