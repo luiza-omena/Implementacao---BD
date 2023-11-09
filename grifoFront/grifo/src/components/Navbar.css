@@ -1,0 +1,29 @@
+.navbar--links-container > a {
+    transition: 300ms;
+    position: relative;
+}
+
+.navbar--links-container > a:hover {
+    color: #1AB2C6;
+}
+
+.navbar--links-container > a:hover::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #1AB2C6 ;
+    left: 0;
+    bottom: 0;
+    border-radius: 50%;
+    animation: growLine 300ms ease;
+}
+
+@keyframes growLine {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
