@@ -1,18 +1,20 @@
+import Logo  from "../assets/grigoLogo.png";
 import "./Navbar.css";
-import Logo from "../assets/logo.svg"
+
 
 export const NavBar = () => {
 
   const NAVIGATION_LINKS = [
-    { name: 'Home', route:'/home'}, 
-    { name: 'What we do', route:'/company'}, 
-    { name: 'About us', route:'/about'}, 
-    { name: 'Contact', route:'/contact'} 
+    { name: 'Início', route:'/inicio'}, 
+    { name: 'Obras', route:'/obras'}, 
+    { name: 'Sobre', route:'/sobre'}, 
+    { name: 'Contato', route:'/contato'} 
   ];
 
   return (
     <>
-    <header className="font-Inter navbar--container bg-white flex justify-between items-center h-20 px-12 shadow-md relative z-[150]">
+    <header className="font-Inter navbar--container bg-white flex justify-between items-center h-10 px-12 shadow-md">
+      <img src={Logo} className="h-10" alt="qtrace company logomark" />
       <nav className="navbar--links-container flex items-center gap-7 h-full relative bg-white">
         { NAVIGATION_LINKS.map( (navLink, index) => (
           <a 
