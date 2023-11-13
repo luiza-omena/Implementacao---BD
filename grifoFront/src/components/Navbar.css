@@ -4,7 +4,7 @@
 }
 
 .navbar--links-container > a:hover {
-    color: #1AB2C6;
+    color: #DAA520;
 }
 
 .navbar--links-container > a:hover::after {
@@ -12,7 +12,7 @@
     position: absolute;
     width: 100%;
     height: 2px;
-    background-color: #1AB2C6 ;
+    background-color: #DAA520 ;
     left: 0;
     bottom: 0;
     border-radius: 50%;

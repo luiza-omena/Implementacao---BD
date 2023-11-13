@@ -39,6 +39,7 @@ module.exports = {
         Avenir: 'Avenir',
         Inter: 'Inter, sans-serif',
         Noto: 'Noto Color Emoji, sans-serif',
+        Medula: 'Medula One',
       }
     },
     plugins: [],
