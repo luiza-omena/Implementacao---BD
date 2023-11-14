@@ -1,0 +1,79 @@
+.text-input--container { 
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: white;
+    height: 40px;
+    border-radius: 12px;
+}
+
+.text-input--container > span {
+    position: absolute;
+    left: 0;
+    width: 40px;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+    color: gray;
+}
+
+.text-input--container > input {
+    transition: 250ms;
+    border-radius: 12px;
+    padding-left: 40px;
+    height: 100%;
+    width: 100%;
+    flex-grow: 1;
+    border: none;
+    line-height: 1.25rem;
+    display: flex;
+    align-items: center;
+}
+
+.text-input--container.error--input > input {
+    outline: none;
+} 
+
+.text-input--container > input:focus > span,
+.text-input--container:focus-within > span {
+    color: black;
+}
+
+.prem-text-input--container { 
+    background-color: white;
+    height: 40px;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    border: 1px solid #C7C7C7;
+    transition: 250ms;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.prem-text-input--container:focus {
+    outline: none;
+    border-color: black;
+}
+
+.checkbox--container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 0.25rem;
+    line-height: 0.85rem;
+}
+
+.checkbox--container > label  {
+    transition: 400ms;
+}
+
+.checkbox--container:hover > label {
+    color: black;
+}
+
+.checkbox--container > input:checked + label  {
+    color: #1AB2C6;
+}
