@@ -1,8 +1,8 @@
 import './Home.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { NavBar } from './components/Navbar';
-import { LandingPage } from './components/LandingPage';
-import { Paintings } from './components/Paintings';
+import { NavBar } from './components/NavBar/Navbar';
+import { LandingPage } from './components/LandingPage/LandingPage';
+import { Paintings } from './components/Paintings/Paintings';
 
 const Home = () => {
   return (

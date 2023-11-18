@@ -1,6 +1,6 @@
-import { HomeContext } from "../context/HomeContext";
+import { HomeContext } from "../../context/HomeContext";
 import { useContext } from 'react';
-import OutLineButton from "./OutlineButton";
+import OutLineButton from "../Buttons/OutlineButton";
 
 const LoginModal = () => {
 

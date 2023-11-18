@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom';  // Importe o componente Link
-import Logo from '../assets/grifo-imagem.png';
+import { Link } from 'react-router-dom';
+import Logo from '../../assets/grifo-imagem.png';
 import './Navbar.css';
 import { useContext } from 'react';
-import { HomeContext } from '../context/HomeContext';
-import LoginModal from './LoginModal';
+import { HomeContext } from '../../context/HomeContext';
+import LoginModal from '../Login/LoginModal';
+import { LockOutlined } from '@ant-design/icons';
 
 export const NavBar = () => {
   const NAVIGATION_LINKS = [
@@ -28,8 +29,8 @@ export const NavBar = () => {
             <span className="text-grey5 font-medium text-[1.04rem]">{navLink.name}</span>
           </Link>
         ))}
-        <div>
-          <button className="w-24 text-grey5 font-medium text-md bg-[#DAA520] rounded-full hover:bg-violet-600" onClick={handleLoginClick}>Login</button>
+        <div className="text-grey5 font-medium cursor-pointer hover:text-[#DAA520]"> 
+          <LockOutlined style={{marginBottom: "8px", fontSize: "20px"}}/>
         </div>
       </nav>
     </header>

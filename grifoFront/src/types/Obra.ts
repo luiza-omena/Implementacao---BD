@@ -1,8 +1,7 @@
 export interface Obra {
-    image: string | undefined;
-	id: number;
-	name: string;
-	artist: string;
-	artistic_era: string;
-	dimensions: string;
+	artista_original: string;
+	dimensoes: string;
+	id_obra: number;
+	movimento_artistico: string;
+	nome: string;
 }

@@ -1,6 +1,6 @@
-import { HomeContext } from "../context/HomeContext";
+import { HomeContext } from "../../context/HomeContext";
 import "./LandingPage.css";
-import LoginModal from "./LoginModal";
+import LoginModal from "../Login/LoginModal";
 import { useContext, useEffect } from 'react';
 
 export const LandingPage = () => {
