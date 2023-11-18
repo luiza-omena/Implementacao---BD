@@ -1,27 +1,56 @@
 import mysql.connector
 
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="omena222",
-    database="universidade"
-)
+def connect_db():
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="omena222",
+        database="grifo"
+    )
+    return mydb
 
-mycursor = mydb.cursor()
+def get_obras():
+    mydb = connect_db()
+    mycursor = mydb.cursor()
+    mycursor.execute('SELECT * FROM Obra')
+    obras = mycursor.fetchall()
+    mycursor.close()
+    return obras
 
-mycursor.execute("""select
-    p.nome as nome_professor,
-    p.sexo as sexo_professor
-from
-    (select matricula_professor
-     from ministra
-     group by matricula_professor, codigo_disciplina
-     having count(distinct codigo_curso, ano_semestre) > 1) as m
-join pessoa as p on m.matricula_professor = p.matricula_pessoa
-group by
-    m.matricula_professor;""")
+def get_funcionarios():
+    mydb = connect_db()
+    mycursor = mydb.cursor()
+    mycursor.execute('SELECT * FROM funcionario')
+    funcionarios = mycursor.fetchall()
+    mycursor.close()
+    return funcionarios
 
-myresult = mycursor.fetchall()
+def get_clientes():
+    mydb = connect_db()
+    mycursor = mydb.cursor()
+    mycursor.execute('SELECT * FROM cliente')
+    clientes = mycursor.fetchall()
+    mycursor.close()
+    return clientes
 
-for x in myresult:
-  print(x)
+def insert_obra(dados):
+    mydb = connect_db()
+    mycursor = mydb.cursor(dictionary=True)
+    
+    query = '''INSERT INTO Obra (nome, artista_original, movimento_artistico, dimensoes) 
+               VALUES (%s, %s, %s, %s)'''
+    values = (
+        dados["nome"], 
+        dados["artista_original"], 
+        dados["movimento_artistico"], 
+        dados["dimensoes"], 
+    )
+    
+    mycursor.execute(query, values)
+    mydb.commit()
+    obra_id = mycursor.lastrowid
+    mycursor.close()
+    mydb.close()
+    return obra_id
+
+print(get_obras())
