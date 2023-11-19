@@ -1,19 +1,54 @@
+import hashlib
+from jose import jwt
 import http.server
 import socketserver
 import json
 import mysql.connector
 
 PORT = 8080
+SECRET_KEY = 'Mydbgrifo'
+ALGORITHM = 'HS256'
 
 def connect_db():
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
         password="omena222",
-        database="grifo"
+        database="grifo2"
     )
     return mydb
 
+def authenticate_user(dados):
+    mydb = connect_db()
+    mycursor = mydb.cursor(dictionary=True)
+
+    # Consulta SQL para verificar se o email e a senha correspondem a um funcionário
+    query = '''SELECT * FROM funcionario WHERE email = %s AND senha = %s'''
+    values = (
+        dados["email"], 
+        dados["password"],
+    )
+
+    print(values)
+    try:
+        mycursor.execute(query, values)
+        funcionario = mycursor.fetchall()
+
+        if not funcionario:
+            print("Authentication failed. No matching user found.")
+            return None
+
+        return funcionario
+
+    except mysql.connector.Error as e:
+        print("Failed to execute query. Error:", str(e))
+        mydb.rollback()
+        exit()
+
+    finally:
+        mycursor.close()
+        mydb.close()
+    
 def get_obras():
     mydb = connect_db()
     mycursor = mydb.cursor(dictionary=True)
@@ -40,6 +75,7 @@ def get_clientes():
     mycursor.close()
     mydb.close()
     return clientes
+
 
 def insert_obra(dados):
     mydb = connect_db()
@@ -106,6 +142,28 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({'obra_id': obra_id}).encode())
             else:
                 self._set_headers(400)
+
+        elif self.path == '/login':
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            login_data = json.loads(post_data)
+            funcionario = authenticate_user(login_data)
+
+            if funcionario:
+                token_payload = {'email': funcionario['email'], 'id': funcionario['id_funcionario']}
+                token = jwt.encode(token_payload, SECRET_KEY, algorithm='HS256')
+
+                response_data = {
+                    'status': 'success',
+                    'message': 'Login bem-sucedido',
+                    token: token.decode('utf-8')
+                }
+
+                self.wfile.write(json.dumps(response_data).encode('utf-8'))
+                self._set_headers(200)
+            else:
+                self._set_headers(400)
+
         else:
             self._set_headers(404)
 

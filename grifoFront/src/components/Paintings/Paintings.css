@@ -1,7 +1,14 @@
-.cart {
-    border: 1px solid #555;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 10px;
-    margin-bottom: 5px;
-  }
+.paintings {
+  position: relative;
+  z-index: 1;
+}
+
+.paintings::before {
+  background-color: grey;
+}
+
+.paintings > a {
+  margin-top: 10px;
+  text-shadow: 
+     1px 1px 0 #000;
+}
