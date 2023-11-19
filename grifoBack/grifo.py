@@ -24,9 +24,10 @@ def authenticate_user(dados):
 
     # Consulta SQL para verificar se o email e a senha correspondem a um funcionário
     query = '''SELECT * FROM funcionario WHERE email = %s AND senha = %s'''
+    hashed_password = hashlib.sha256(dados['password'].encode()).hexdigest()
     values = (
         dados["email"], 
-        dados["password"],
+        dados["hashed_password"],
     )
 
     print(values)
@@ -80,16 +81,19 @@ def get_clientes():
 def insert_obra(dados):
     mydb = connect_db()
     mycursor = mydb.cursor(dictionary=True)
-    
-    query = '''INSERT INTO Obra (nome, artista_original, movimento_artistico, dimensoes) 
-               VALUES (%s, %s, %s, %s)'''
+    obra_data = dados["values"][0]
+
+    query = '''INSERT INTO Obra (nome, artista_original, movimento_artistico, dimensoes, img)
+               VALUES (%s, %s, %s, %s, %s)'''
     values = (
-        dados["nome"], 
-        dados["artista_original"], 
-        dados["movimento_artistico"], 
-        dados["dimensoes"], 
+        obra_data["nome"],
+        obra_data["artista_original"],
+        obra_data["movimento_artistico"],
+        obra_data["dimensoes"],
+        obra_data["img"],
     )
     try:
+        print(values)
         mycursor.execute(query, values)
         mydb.commit()
         obra_id = mycursor.lastrowid
@@ -135,7 +139,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
             obra_data = json.loads(post_data)
-
+            print(obra_data)
             obra_id = insert_obra(obra_data)
             if obra_id:
                 self._set_headers(201)

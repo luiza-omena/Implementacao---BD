@@ -1,0 +1,139 @@
+/* UserCredentialsModal.css */
+
+.user--credential--modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 400px; /* ajuste conforme necessário */
+  }
+  
+  .fadeOutModal {
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
+  }
+  
+  .modal--container-title {
+    background-color: #fff;
+    color: #008080;
+    font-size: 1.4rem;
+    font-weight: medium;
+    text-align: center;
+    padding: 1rem 0;
+  }
+  
+  .cursor-default {
+    cursor: default;
+  }
+  
+  .bg-grey3 {
+    background-color: #f2f2f2;
+  }
+  
+  .modal-content {
+    margin: 10px;
+  }
+  
+  /* LoginContainer */
+  
+  .login-container {
+    padding: 10px;
+  }
+  
+  .login-container h2 {
+    font-size: 1rem;
+    font-weight: medium;
+    margin-bottom: 5px;
+  }
+  
+  .login-container span {
+    font-size: 0.9rem;
+    color: #808080;
+  }
+  
+  .login-container button {
+    color: #008080;
+    cursor: pointer;
+    transition: brightness 0.2s;
+  }
+  
+  .login-container button:hover {
+    brightness: 0.9;
+  }
+  
+  .login-form {
+    padding: 10px;
+  }
+  
+  /* SignupContainer */
+  
+  .signup-container {
+    padding: 10px;
+  }
+  
+  .signup-container h2 {
+    font-size: 1rem;
+    font-weight: medium;
+  }
+  
+  .signup-container span {
+    font-size: 0.9rem;
+    color: #808080;
+  }
+  
+  .signup-form {
+    padding: 10px;
+  }
+  
+  /* TextInput and Label components */
+  
+  .input-label {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .input-field-error {
+    border-color: #ff0000;
+  }
+  
+  .checkbox-label {
+    font-size: 0.9rem;
+  }
+  
+  /* OutlineButton component */
+  
+  .outline-button {
+    min-width: 133px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .outline-button:hover {
+    color: #000;
+  }
+  
+  /* ModalOverlay component */
+  
+  .credential--overlay-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  

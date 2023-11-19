@@ -1,0 +1,11 @@
+.seu-input-estilo {
+    border: 1px solid #ccc; /* Cor e largura da borda padrão */
+    padding: 8px; /* Espaçamento interno para melhorar a aparência */
+    /* Adicione outros estilos conforme necessário */
+  }
+  
+  .seu-input-estilo:focus {
+    outline: none; /* Remove a borda padrão de foco do navegador, se desejar */
+    border-color: #00f; /* Cor da borda quando o input está em foco */
+    box-shadow: 0 0 5px rgba(0, 0, 255, 0.5); /* Sombra quando o input está em foco */
+  }

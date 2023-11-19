@@ -4,6 +4,7 @@ import { Button, Col, Form, Input, Row, message } from "antd"
 import input from "antd/es/input";
 import { useAuth } from "../../context/AuthProvider/useAuth";
 import { useNavigate } from "react-router-dom";
+import { CloseOutlined } from "@ant-design/icons";
 
 const LoginModal = () => {
 
@@ -28,18 +29,20 @@ const LoginModal = () => {
 
 	return (
 		<>	
-			<div className="top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 results-modal--wrapper fixed z-[3] bg-white font-Helvetica rounded-[14px] border-grey3">
+			<div className="top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 fixed z-[3] bg-white font-Helvetica rounded-[14px] border-grey3">
+				<CloseOutlined style={{marginLeft: "650px", fontSize:"20px", color:"#DAA520", marginTop:"10px", marginRight:"10px"}} onClick={() => setOpenUserCredentialsModal(false)}/>
+				<h2 className='text-[#DAA520] text-4xl font-Inter font-semibold ml-4 mt-2 cursor-default'>Login</h2>
 				<div className="flex items-center justify-center">
 					<Row
-						justify='center'
-						align='middle'
+					align={"middle"}
+					justify={"end"}
 						style={{
-						height: '500px',
-						width: '500px',
+						height: '300px',
+						width: '600px',
 						zIndex: '3'
 						}}
 					>
-						<Col span={12}>
+						<Col span={24}>
 							<Form
 							name='basic'
 							labelCol={{span: 8}}
@@ -58,10 +61,8 @@ const LoginModal = () => {
 									<input.Password />
 								</Form.Item>
 
-								<Form.Item wrapperCol={{ offset: 8, span:16}}>
-									<Button htmlType="submit" className="z-[4] bg-grey1">
-										Entrar
-									</Button>
+								<Form.Item wrapperCol={{ offset: 8, span:20}}>
+								<button type="submit" className="w-32 rounded-full border-2 border-[#DAA520] text-[#DAA520] flex justify-center font-semibold hover:bg-grey1">Entrar</button>
 								</Form.Item>
 							</Form>
 						</Col>

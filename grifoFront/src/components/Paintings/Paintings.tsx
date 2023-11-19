@@ -1,20 +1,27 @@
 import { useContext, useEffect, useState } from "react";
 import { Obra } from "../../types/Obra";
 import "./Paintings.css";
-import axios from "axios";
 import LoginModal from "../Login/LoginModal";
 import { HomeContext } from "../../context/HomeContext";
+import { Api } from "../../hooks/useApi";
+import { useAuth } from "../../context/AuthProvider/useAuth";
+import { PlusOutlined } from "@ant-design/icons";
+import PostObra from "../PostObraModal/PostObra";
 
 export const Paintings = () => {
-  const { openUserCredentialsModal } = useContext(HomeContext)
+  const { openUserCredentialsModal, setPostObraModal, postObraModal } = useContext(HomeContext)
   const [obras, setObras] = useState<Obra[]>([])
+  const auth = useAuth();
+
+  const handlePost = () => {
+    setPostObraModal(true);
+}
 
   useEffect(() => {
     async function fetchData() {
         try{
-            const res = await axios.get("http://localhost:8080/obras")
-            console.log(res)
-            setObras(res.data)
+            const response = Api.get("obras");
+            setObras((await response).data)
         } catch(error){
             console.log(error)
         }
@@ -24,8 +31,15 @@ export const Paintings = () => {
       
   return (
     <div className="paintings">
-      <div className="mt-10 paintings">
+      <div className="mt-10 paintings flex flex-row justify-between">
         <a className="text-[#DAA520] text-4xl font-Inter ml-20 cursor-default">Obras</a>
+        {auth.email && 
+        <div onClick={handlePost} className="mr-20 mt-2 flex justify-between items-center w-32 font-Inter bg-grey1 rounded-lg border border-grey1 hover:bg-[#DAA520]">
+            <PlusOutlined style={{color: "grey1", marginLeft:"18px", fontSize:"20px"}}/>
+            <button className="text-xl font-Inter mr-8">Obra</button>
+        </div>
+        }
+        {postObraModal && <PostObra/>}
       </div>
         
       <div className="place-items-center grid grid-cols-3">

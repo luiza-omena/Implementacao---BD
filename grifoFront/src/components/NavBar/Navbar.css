@@ -19,6 +19,11 @@
     animation: growLine 300ms ease;
 }
 
+.navadmin--links-container > a {
+    transition: 300ms;
+    position: relative;
+}
+
 @keyframes growLine {
     0% {
         width: 0;
