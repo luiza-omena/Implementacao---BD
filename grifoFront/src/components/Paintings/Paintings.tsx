@@ -5,7 +5,7 @@ import LoginModal from "../Login/LoginModal";
 import { HomeContext } from "../../context/HomeContext";
 import { Api } from "../../hooks/useApi";
 import { useAuth } from "../../context/AuthProvider/useAuth";
-import { PlusOutlined } from "@ant-design/icons";
+import { DeleteFilled, PlusOutlined } from "@ant-design/icons";
 import PostObra from "../PostObraModal/PostObra";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +17,20 @@ export const Paintings = () => {
 
   const handlePost = () => {
     setPostObraModal(true);
-}
+  }
+
+  async function deleteObra(obraId: number | null) {
+    try {
+      const response = await Api.delete(`delete-obra/${obraId}`);
+      console.log(response.data);
+      setTimeout(function() {
+        location.reload();
+      }, 100);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 
   useEffect(() => {
     async function fetchData() {
@@ -46,18 +59,21 @@ export const Paintings = () => {
         
       <div className="place-items-center grid grid-cols-3">
         {obras.map((obra) => (
-          <div className="mt-10 mb-2 mx-5 w-80 cursor-pointer" key={obra.id_obra} onClick={() => { setObraId(obra.id_obra); navigate(`/fichaTecnica/${obra.id_obra}`); }}>
+          <div className="mt-10 mb-2 mx-5 w-80 cursor-pointer" key={obra.id_obra}>
             <div className="flex-col justify-center">
-              <div className="rounded-t-lg overflow-hidden">
+              <div className="rounded-t-lg overflow-hidden"  onClick={() => { setObraId(obra.id_obra); navigate(`/fichaTecnica/${obra.id_obra}`); }}>
                 <img
                   className="object-cover object-center w-full h-[400px]"
                   src={obra.img}
                   alt={obra.nome}
                 />
               </div>
-              <div className="flex flex-col justify-between items-center bg-[#DAA520] rounded-b-lg h-fit">
-                <h1 className="font-Inter text-lg font-semibold">{obra.nome}</h1>
-                <h2 className="font-Inter text-md font-medium">{obra.artista_original}</h2>
+              <div className="flex flex-row justify-between bg-[#DAA520] rounded-b-lg h-fit">
+                <div className="flex flex-col justify-between ml-[10%]"  onClick={() => { setObraId(obra.id_obra); navigate(`/fichaTecnica/${obra.id_obra}`); }}>
+                  <h1 className="font-Inter text-lg font-semibold">{obra.nome}</h1>
+                  <h2 className="font-Inter text-md font-medium">{obra.artista_original}</h2>
+                </div>
+                <DeleteFilled style={{fontSize:"18px", marginTop:"5%", marginRight:"15%"}} onClick={() => deleteObra(obra.id_obra)}/>
               </div>
             </div>
           </div>

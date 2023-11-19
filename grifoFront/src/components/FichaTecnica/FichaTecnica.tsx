@@ -14,7 +14,6 @@ export const FichaTecnicaPage = () => {
     const auth = useAuth();
   
     useEffect(() => {
-        console.log("oi")
       async function fetchData() {
           try{
               const response = Api.get(`fichaTecnica/${id}`);

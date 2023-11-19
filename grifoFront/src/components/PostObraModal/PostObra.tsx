@@ -3,6 +3,8 @@ import { HomeContext } from '../../context/HomeContext';
 import { Obra } from '../../types/Obra';
 import { Api } from '../../hooks/useApi';
 import { CloseOutlined } from '@ant-design/icons';
+import { BensMoveis } from '../../types/BensMoveis';
+import { BensImoveis } from '../../types/BensImoveis';
 
 
 const PostObra = () => {
@@ -21,9 +23,13 @@ const PostObra = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    async function onFinish(values: Obra[]) {
+    async function onFinish(values: Obra[], obraMovel: boolean, bemMovel: BensMoveis, bemImovel: BensImoveis) {
         try{
-            await Api.post("insert-obra", { values });
+            if(obraMovel){
+                await Api.post("insert-obra", { values, obraMovel, bemMovel });
+            } else {
+                await Api.post("insert-obra", { values, obraMovel, bemImovel });
+            }   
         } catch(error){
             console.log(error)
         }
@@ -39,7 +45,26 @@ const PostObra = () => {
             movimento_artistico: formData.movimento_artistico,
             nome: formData.nome,
         };
-        onFinish([obra])
+
+        let obraMovel: boolean;
+        if(formData.tipoBem == "Bens_moveis"){
+            obraMovel = true
+        } else {
+            obraMovel = false
+        }
+
+        const bemMovel:  BensMoveis = {
+            descricao: "oi",
+        }
+
+        const bemImovel:  BensImoveis = {
+            estado: "Pernambuco",
+            rua: "rua do chacon",
+            bairro: "Poço da panela",
+            cidade: "Recife",
+            numero: 49
+        }
+        onFinish([obra], obraMovel, bemMovel, bemImovel)
         // Limpar o formulário após o envio, se necessário
         setFormData({
         nome: '',
@@ -151,7 +176,7 @@ const PostObra = () => {
                         <br />
                     </div>
                     <div className='w-32 rounded-full border-2 border-[#DAA520] text-[#DAA520] flex justify-center font-semibold text-xl font-Inter mt-4 ml-[43%]'>
-                        <button type="submit">Adicionar</button>
+                        <button type="submit">Próximo</button>
                     </div>
                 </form>
                 </div>
