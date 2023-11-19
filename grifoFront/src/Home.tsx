@@ -8,6 +8,7 @@ import HomeProvider from './context/HomeContext';
 import { AuthProvider } from './context/AuthProvider';
 import { ProtectedLayout } from './components/ProtectedLayout/Protected';
 import { AdminPage } from './components/AdminPage/Admin';
+import { FichaTecnicaPage } from './components/FichaTecnica/FichaTecnica';
 
 const Home = () => {
   return (
@@ -19,6 +20,7 @@ const Home = () => {
               <NavBar />
               <Routes>
                 <Route path="" element={<LandingPage />} />
+                <Route path="/fichaTecnica/:id" element={<FichaTecnicaPage />} />
                 <Route path="/obras" element={<Paintings />} />
                 <Route path="/login" element={<LoginModal />} />
                 <Route path="/admin" element={<ProtectedLayout children={<AdminPage/>} />}/>

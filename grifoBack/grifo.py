@@ -59,6 +59,21 @@ def get_obras():
     mydb.close()
     return obras
 
+def get_ficha(id):
+    mydb = connect_db()
+    mycursor = mydb.cursor(dictionary=True)
+    query = '''
+        SELECT ft.*
+        FROM Ficha_tecnica ft
+        INNER JOIN Restaura_Obra_Restaurador_Orcamento ro ON ft.fk_id_restauracao = ro.id_restauracao
+        WHERE ro.fk_Obra_id = %s
+    ''' 
+    mycursor.execute(query, (id,))
+    ficha = mycursor.fetchall()
+    mycursor.close()
+    mydb.close()
+    return ficha
+
 def get_funcionarios():
     mydb = connect_db()
     mycursor = mydb.cursor(dictionary=True)
@@ -128,6 +143,11 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
             self._set_headers(200)
             clientes = get_clientes()
             self.wfile.write(json.dumps(clientes).encode())
+        elif self.path.startswith('/fichaTecnica/'):
+            id = self.path.split('/')[-1]
+            self._set_headers(200)
+            ficha = get_ficha(id)
+            self.wfile.write(json.dumps(ficha, indent=4, sort_keys=True, default=str).encode())
         else:
             self._set_headers(404)
 

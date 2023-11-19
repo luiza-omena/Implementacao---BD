@@ -7,11 +7,13 @@ import { Api } from "../../hooks/useApi";
 import { useAuth } from "../../context/AuthProvider/useAuth";
 import { PlusOutlined } from "@ant-design/icons";
 import PostObra from "../PostObraModal/PostObra";
+import { useNavigate } from "react-router-dom";
 
 export const Paintings = () => {
-  const { openUserCredentialsModal, setPostObraModal, postObraModal } = useContext(HomeContext)
+  const { openUserCredentialsModal, setPostObraModal, postObraModal, setObraId } = useContext(HomeContext)
   const [obras, setObras] = useState<Obra[]>([])
   const auth = useAuth();
+  const navigate = useNavigate();
 
   const handlePost = () => {
     setPostObraModal(true);
@@ -44,7 +46,7 @@ export const Paintings = () => {
         
       <div className="place-items-center grid grid-cols-3">
         {obras.map((obra) => (
-          <div className="mt-10 mb-2 mx-5 w-80" key={obra.id_obra}>
+          <div className="mt-10 mb-2 mx-5 w-80 cursor-pointer" key={obra.id_obra} onClick={() => { setObraId(obra.id_obra); navigate(`/fichaTecnica/${obra.id_obra}`); }}>
             <div className="flex-col justify-center">
               <div className="rounded-t-lg overflow-hidden">
                 <img
