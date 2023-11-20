@@ -172,8 +172,8 @@ def insert_ficha(dados):
     mydb = connect_db()
     mycursor = mydb.cursor(dictionary=True)
     ficha_data = dados["values"][0]
-    data_inicio_obra_str = '2004-05-03T03:00:00.000Z'
-    data_termino_obra_str = '2004-05-06T03:00:00.000Z'
+    data_inicio_obra_str = ficha_data["data_inicio_obra"]
+    data_termino_obra_str = ficha_data["data_termino_obra"]
 
     # Usar dateutil.parser para converter as strings para objetos datetime
     data_inicio_obra_dt = parser.parse(data_inicio_obra_str)
@@ -214,6 +214,33 @@ def insert_ficha(dados):
             mydb.close()
             exit()
         return ficha_id
+    
+def update_ficha(id, campo, novo_valor):
+    try:
+        mydb = connect_db()
+        mycursor = mydb.cursor(dictionary=True)
+
+        print(id)
+        print(campo)
+        print(novo_valor)
+        query = f'''
+            UPDATE Ficha_tecnica
+            SET {campo} = %s
+            WHERE fk_id_restauracao IN (
+                SELECT ro.id_restauracao
+                FROM Restaura_Obra_Restaurador_Orcamento ro
+                WHERE ro.fk_Obra_id = %s
+            )
+        '''
+
+        mycursor.execute(query, (novo_valor, id))
+        mydb.commit()
+        mycursor.close()
+        mydb.close()
+
+        return True, "Atualização bem-sucedida"
+    except Exception as e:
+        return False, f"Erro na atualização: {str(e)}"
 
 def delete_obra(id_obra):
     mydb = connect_db()
@@ -341,8 +368,26 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
             self._set_headers(404)
 
     def do_PUT(self):
-        # Adicionar o script de update quando tiver pronto
-        self._set_headers(404)
+        if self.path == '/update-ficha':
+            content_length = int(self.headers['Content-Length'])
+            put_data = self.rfile.read(content_length)
+            ficha_data = json.loads(put_data)
+            print(ficha_data)
+            # Substitua a função apropriada para atualizar a ficha (por exemplo, update_ficha)
+            ficha_updated = update_ficha(ficha_data['idObra'],ficha_data['campo'], ficha_data['valor'])
+            
+            if ficha_updated:
+                self._set_headers(200)
+                self.wfile.write(json.dumps({'status': 'success'}).encode())
+            else:
+                response_data = {
+                    'status': 'error',
+                    'message': 'Falha ao atualizar a ficha.'
+                }
+                self._set_headers(400)
+                self.wfile.write(json.dumps(response_data).encode())
+        else:
+            self._set_headers(404)
 
     def do_DELETE(self):
         if self.path.startswith('/delete-obra/'):

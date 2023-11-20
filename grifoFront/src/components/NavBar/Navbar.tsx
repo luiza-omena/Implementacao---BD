@@ -16,9 +16,9 @@ export const NavBar = () => {
   ];
 
   const ADMIN_LINKS = [
-    { name: 'Início', route: '' },
+    { name: 'Início', route: '/admin' },
     { name: 'Obras', route: '/obras' },
-    { name: 'Clientes', route: '/clientes' },
+    { name: 'Funcionários', route: '/funcionarios' },
   ];
   
   const { setOpenUserCredentialsModal } = useContext(HomeContext)
