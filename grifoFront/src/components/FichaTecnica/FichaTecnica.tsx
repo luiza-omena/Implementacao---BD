@@ -3,23 +3,34 @@ import { HomeContext } from "../../context/HomeContext";
 import { FichaTecnica } from "../../types/FichaTecnica";
 import { Api } from "../../hooks/useApi";
 import { useAuth } from "../../context/AuthProvider/useAuth";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import LoginModal from "../Login/LoginModal";
 import { useParams } from "react-router-dom";
+import PostFicha from "../PostFichaTecnica/PostFicha";
 
 export const FichaTecnicaPage = () => {
     const { id } = useParams();
-    const {openUserCredentialsModal} = useContext(HomeContext)
+    const {openUserCredentialsModal, setPostFichaModal, postFichaModal} = useContext(HomeContext)
     const [ficha, setFicha] = useState<FichaTecnica[]>([])
+    const [createFicha, setCreateFicha] = useState<boolean>(false)
     const auth = useAuth();
   
     useEffect(() => {
       async function fetchData() {
           try{
-              const response = Api.get(`fichaTecnica/${id}`);
-              setFicha((await response).data)
+              const response = await Api.get(`fichaTecnica/${id}`);
+              console.log(response)
+              setFicha(response.data)
+              setCreateFicha(false);
           } catch(error){
               console.log(error)
+              if (error instanceof Error) {
+                // Verifica se a propriedade 'response' existe
+                const errorWithResponse = error as { response?: { status?: number } };
+                if (errorWithResponse.response && errorWithResponse.response.status === 400) {
+                    setCreateFicha(true);
+                }
+            }
           }
       }
       fetchData()
@@ -29,7 +40,7 @@ export const FichaTecnicaPage = () => {
       <div className="">
         <div className="mt-10 paintings flex flex-row justify-between">
           <a className="text-[#DAA520] text-4xl font-Inter ml-20 cursor-default">Ficha Técnica</a>
-          {auth.email && 
+          {auth.email && !createFicha &&
           <div onClick={() => null} className="mr-20 mt-2 flex justify-between items-center w-32 font-Inter bg-grey1 rounded-lg border border-grey1 hover:bg-[#DAA520]">
               <EditOutlined style={{color: "grey1", marginLeft:"18px", fontSize:"20px"}}/>
               <button className="text-xl font-Inter mr-8">Editar Ficha</button>
@@ -37,6 +48,16 @@ export const FichaTecnicaPage = () => {
           }
         </div>
           
+        { createFicha ?
+        <div>
+          <a>A obra ainda não possui uma ficha técnica</a>
+          {auth.email && 
+          <div>
+            <PlusOutlined onClick={() => setPostFichaModal(true)}/>
+            <button className="" onClick={() => setPostFichaModal(true)}>Adicionar</button>
+          </div>}
+        </div>
+        :       
         <div className="place-items-center grid grid-cols-3">
           {ficha.map((ficha) => (
             <div className="mt-10 mb-2 mx-5 w-80" key={ficha.cod_ficha}>
@@ -68,8 +89,9 @@ export const FichaTecnicaPage = () => {
                 </div>
             </div>
           ))}
-        </div>
+        </div>}
         {openUserCredentialsModal && <LoginModal/>}
+        {postFichaModal && <PostFicha/>}
       </div>
     );
   };

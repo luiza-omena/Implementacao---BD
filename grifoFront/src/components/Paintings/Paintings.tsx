@@ -8,9 +8,11 @@ import { useAuth } from "../../context/AuthProvider/useAuth";
 import { DeleteFilled, PlusOutlined } from "@ant-design/icons";
 import PostObra from "../PostObraModal/PostObra";
 import { useNavigate } from "react-router-dom";
+import BemMovel from "../BensModal/BensMoveis";
+import BemImovel from "../BensModal/BensImoveis";
 
 export const Paintings = () => {
-  const { openUserCredentialsModal, setPostObraModal, postObraModal, setObraId } = useContext(HomeContext)
+  const { openUserCredentialsModal, setPostObraModal, postObraModal, setObraId, bemImovel, bemMovel, newObra } = useContext(HomeContext)
   const [obras, setObras] = useState<Obra[]>([])
   const auth = useAuth();
   const navigate = useNavigate();
@@ -80,6 +82,8 @@ export const Paintings = () => {
         ))}
       </div>
       {openUserCredentialsModal && <LoginModal/>}
+      {bemImovel && <BemImovel values={newObra} obraMovel={bemMovel}/>}
+      {bemMovel && <BemMovel values={newObra} obraMovel={bemMovel}/>}
     </div>
   );
 };
