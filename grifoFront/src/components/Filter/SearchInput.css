@@ -1,0 +1,65 @@
+.search-input--container{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: white;
+    padding: 0.25rem 0.5rem;
+
+    border: 1px solid black;
+    border-radius: 8px;
+
+    outline: none;
+    transition: 500ms;
+}
+
+.search-input--container:focus-within {
+    outline: 1px solid black;
+}
+
+.search-input--container span,
+.search-input--container button {
+    height: 1rem;
+    width: 1rem;
+    position: absolute;
+}
+
+.search-input--container > input {
+    min-width: 200px;
+    text-indent: 5px;
+    font-size: 0.75rem;
+    margin-left: 1.2rem;
+    margin-right: 1rem;
+}
+
+.search-input--container > input {
+    outline: none;
+}
+
+.search-input--container > button {
+    right: 5px;
+}
+
+.filter--tag-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 5px;
+    margin-right: 0.75rem;
+    font-size: 0.8rem;
+    gap: 5px;
+    background-color: white;
+    border: px solid black;
+    border-radius: 5px;
+    cursor: default;
+    outline: none;
+    transition: 500ms;
+}
+
+.filter--tag-button{
+    font-size: 0.65rem;
+}

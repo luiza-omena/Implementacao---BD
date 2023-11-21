@@ -1,25 +1,25 @@
-.descricao {
-    text-align: justify;
-    font-size: 25px;
-    font-family: Poppins;
-    margin-left: 50px;
-  }
-
-/* Sobre.css */
-
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh; /* Isso vai garantir que o conteúdo esteja centralizado na tela verticalmente */
+  position: relative;
+  z-index: 1;
+}
 
-  }
-  
-  .conteudo {
-    text-align: center;
-
-  }
-.imagem{
-    width: 30%;
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0; 
+  left: 0;
+  width: 300%; 
+  height: 100%;  
+  opacity: .4; 
+  z-index: -1;
+  background-image: url(../../assets/obraExemplo2.webp);
+  background-position: top;
 }
   
+.container > a {
+  text-shadow:
+   -1px -1px 0 #DAA520,  
+    1px -1px 0 #DAA520,
+    -1px 1px 0 #DAA520,
+     1px 1px 0 #DAA520;
+}

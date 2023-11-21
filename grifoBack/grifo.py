@@ -3,6 +3,7 @@ import http.server
 import socketserver
 import json
 import mysql.connector
+from urllib.parse import urlparse, parse_qs
 
 from dateutil import parser
 
@@ -50,14 +51,36 @@ def authenticate_user(dados):
         mycursor.close()
         mydb.close()
     
-def get_obras():
-    mydb = connect_db()
-    mycursor = mydb.cursor(dictionary=True)
-    mycursor.execute('SELECT * FROM Obra')
-    obras = mycursor.fetchall()
-    mycursor.close()
-    mydb.close()
-    return obras
+def get_obras(**filters):
+    try:
+        mydb = connect_db()
+        mycursor = mydb.cursor(dictionary=True)
+
+        # Construir a query SQL base
+        query = 'SELECT * FROM Obra'
+        keys = ['nome', 'artista_original']
+        # Construir a cláusula WHERE com base nos filtros
+        where_conditions = []
+        print(filters.items())
+        for value in filters.items():
+            where_conditions.append(f"nome LIKE '%{value[1]}%'")
+        for value in filters.items():
+            where_conditions.append(f"artista_original LIKE '%{value[1]}%'")
+
+        # Adicionar a cláusula WHERE à query se houver filtros
+        if where_conditions:
+            query += ' WHERE ' + ' OR '.join(where_conditions)
+
+        print(query)
+        mycursor.execute(query)
+        obras = mycursor.fetchall()
+        mycursor.close()
+        mydb.close()
+
+        return obras
+    except Exception as e:
+        print(f"Erro ao obter obras: {e}")
+        return []
 
 def get_ficha(id):
     mydb = connect_db()
@@ -340,9 +363,19 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        if self.path == '/obras':
+        if self.path.startswith('/obras'):
+            # Parse os parâmetros da URL
+            parsed_url = urlparse(self.path)
+            query_params = parse_qs(parsed_url.query)
+            print(query_params)
+            # Converter os valores de lista para strings (se necessário)
+            filters = {key: value[0] for key, value in query_params.items()}
+            print(filters)
+            # Sua lógica de negócios com os filtros
+            obras = get_obras(**filters)
+
+            # Envie a resposta JSON
             self._set_headers(200)
-            obras = get_obras()
             self.wfile.write(json.dumps(obras).encode())
         elif self.path == '/funcionarios':
             self._set_headers(200)
