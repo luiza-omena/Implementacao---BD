@@ -10,6 +10,7 @@ import { ProtectedLayout } from './components/ProtectedLayout/Protected';
 import { AdminPage } from './components/AdminPage/Admin';
 import { FichaTecnicaPage } from './components/FichaTecnica/FichaTecnica';
 import { Funcionarios } from './components/FuncionariosPage/Funcionarios';
+import Sobre from './components/Sobre/Sobre';
 
 const Home = () => {
   return (
@@ -25,7 +26,8 @@ const Home = () => {
                 <Route path="/obras" element={<Paintings />} />
                 <Route path="/login" element={<LoginModal />} />
                 <Route path="/admin" element={<ProtectedLayout children={<AdminPage/>} />}/>
-                <Route path="/funcionarios" element={<ProtectedLayout children={<Funcionarios/>} />}/>
+                <Route path="/funcionarios" element={<ProtectedLayout children={<Funcionarios/>} />}/> 
+                <Route path="/sobre" element={<Sobre />} />
               </Routes>
             </div>
           </div>

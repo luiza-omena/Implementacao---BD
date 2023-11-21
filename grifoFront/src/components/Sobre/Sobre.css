@@ -1,0 +1,25 @@
+.descricao {
+    text-align: justify;
+    font-size: 25px;
+    font-family: Poppins;
+    margin-left: 50px;
+  }
+
+/* Sobre.css */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh; /* Isso vai garantir que o conteúdo esteja centralizado na tela verticalmente */
+
+  }
+  
+  .conteudo {
+    text-align: center;
+
+  }
+.imagem{
+    width: 30%;
+}
+  
