@@ -242,6 +242,52 @@ def update_ficha(id, campo, novo_valor):
     except Exception as e:
         return False, f"Erro na atualização: {str(e)}"
 
+def insert_funcionario(dados):
+    mydb = connect_db()
+    mycursor = mydb.cursor(dictionary=True)
+
+    query_obter_pk = "SELECT telefone_Pk FROM telefone_funcionario ORDER BY RAND() LIMIT 1"
+    mycursor.execute(query_obter_pk)
+
+    telefone_pk_dados = mycursor.fetchone()
+    telefone_pk = telefone_pk_dados["telefone_Pk"]
+    nome = dados["values"][0]["nome"]
+    email = dados["values"][0]["email"]
+    estado = dados["values"][0]["estado"]
+    rua = dados["values"][0]["rua"]
+    bairro = dados["values"][0]["bairro"]
+    cidade = dados["values"][0]["cidade"]
+    numero = str(dados["values"][0]["numero"])
+    salario = str(dados["values"][0]["salario"])
+
+    query_inserir_funcionario = '''INSERT INTO Funcionario(nome, email, fk_telefone_pk, estado, rua, bairro, cidade, numero, salario)
+                                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+    values = (
+        nome,
+        email,
+        telefone_pk,
+        estado,
+        rua,
+        bairro,
+        cidade,
+        numero,
+        salario
+    )
+
+    print(values)
+    try:
+        mycursor.execute(query_inserir_funcionario, values)
+        mydb.commit()  
+        funcionario_id = mycursor.lastrowid
+        mycursor.close()
+        mydb.close()
+    except Exception as e:
+        print ("Failed to add to MySQL database:", e)
+        mydb.close()
+        exit()
+
+    return funcionario_id
+
 def delete_obra(id_obra):
     mydb = connect_db()
     mycursor = mydb.cursor()
@@ -263,6 +309,25 @@ def delete_obra(id_obra):
         mycursor.close()
         mydb.close()
         return 0
+    
+def delete_funcionario(id_funcionario):
+    mydb = connect_db()
+    mycursor = mydb.cursor()
+
+    try:
+        delete_query = "DELETE FROM Funcionario WHERE id_funcionario = %s"
+        mycursor.execute(delete_query, (id_funcionario,))
+        mydb.commit()
+        mycursor.close()
+        mydb.close()
+        return 1
+
+    except mysql.connector.Error as error:
+        mydb.rollback()
+        mycursor.close()
+        mydb.close()
+        return 0
+
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
 
@@ -335,6 +400,21 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
                 }
                 self._set_headers(400)
                 self.wfile.write(json.dumps(response_data).encode())
+        
+        elif self.path == '/insert-funcionario':
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            funcionario_data = json.loads(post_data)
+            funcionario_id = insert_funcionario(funcionario_data)
+            if funcionario_id:
+                self._set_headers(201)
+                self.wfile.write(json.dumps({'funcionario_id': funcionario_id}).encode())
+            else:
+                response_data = {
+                    'status': 'error',
+                }
+                self._set_headers(400)
+                self.wfile.write(json.dumps(response_data).encode())
 
         elif self.path == '/login':
             content_length = int(self.headers['Content-Length'])
@@ -400,9 +480,21 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
             else:
                 self._set_headers(400)
                 self.wfile.write(json.dumps({'message': 'Obra não encontrada'}).encode())
+
+        elif self.path.startswith('/delete-funcionario/'):
+            funcionario_id = self.path.split('/')[-1]
+            success = delete_funcionario(funcionario_id)
+
+            if success:
+                self._set_headers(200)
+                self.wfile.write(json.dumps({'message': 'funcionário deletado com sucesso'}).encode())
+            else:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({'message': 'funcionario não encontrado'}).encode())
         else:
             self._set_headers(404)
             self.wfile.write(json.dumps({'message': 'Rota não encontrada'}).encode())
+        
 
 with socketserver.TCPServer(("", PORT), RequestHandler) as httpd:
     print(f"Conectado na porta {PORT}")

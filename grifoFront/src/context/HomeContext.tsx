@@ -18,6 +18,8 @@ interface IHomeContext {
 	setNewObra: (newObra: Obra[]) => void
 	updateModal: boolean
 	setUpdateModal: (postFichaModal: boolean) => void
+	funcionarioModal: boolean
+	setFuncionarioModal: (funcionarioModal: boolean) => void
 }
 
 export const HomeContext = createContext<IHomeContext>({} as IHomeContext)
@@ -29,6 +31,7 @@ const HomeProvider = (props: any) => {
 	const [updateModal, setUpdateModal] = useState<boolean>(false)
 	const [bemMovel, setBemMovel] = useState<boolean>(false)
 	const [bemImovel, setBemImovel] = useState<boolean>(false)
+	const [funcionarioModal, setFuncionarioModal] = useState<boolean>(false)
 	const [obraId, setObraId] = useState<number | null>(null)
 	const [newObra, setNewObra] = useState<Obra[]>([])
 
@@ -43,6 +46,7 @@ const HomeProvider = (props: any) => {
 				newObra, setNewObra,
 				postFichaModal, setPostFichaModal,
 				updateModal, setUpdateModal,
+				funcionarioModal, setFuncionarioModal,
 			}}
 		>
 			{props.children}

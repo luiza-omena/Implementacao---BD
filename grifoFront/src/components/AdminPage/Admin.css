@@ -1,0 +1,14 @@
+.adm {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .adm::before {
+    background-color: grey;
+  }
+  
+  .adm > a {
+    margin-top: 10px;
+    text-shadow: 
+       1px 1px 0 #000;
+  }
