@@ -57,7 +57,7 @@ def get_obras(**filters):
 
         # Construir a query SQL base
         query = 'SELECT * FROM Obra'
-        keys = ['nome', 'artista_original', 'movimento_artistico']
+        keys = ['nome', 'artista_original', 'movimento_artistico', 'dimensoes']
         # Construir a cláusula WHERE com base nos filtros
         where_conditions = []
         for key in keys:
@@ -85,7 +85,7 @@ def get_bens_moveis(**filters):
         mycursor = mydb.cursor(dictionary=True)
 
         # Construir a query SQL base
-        query = 'SELECT * FROM obra WHERE id_obra IN (SELECT fk_Obra_id_obra FROM bens_moveis);'
+        query = 'SELECT * FROM obra WHERE id_obra IN (SELECT fk_Obra_id_obra FROM bens_moveis)'
         keys = ['nome', 'artista_original', 'movimento_artistico']
         # Construir a cláusula WHERE com base nos filtros
         where_conditions = []
@@ -114,7 +114,7 @@ def get_bens_imoveis(**filters):
         mycursor = mydb.cursor(dictionary=True)
 
         # Construir a query SQL base
-        query = 'SELECT * FROM obra WHERE id_obra IN (SELECT fk_Obra_id_obra FROM bens_imoveis);'
+        query = 'SELECT * FROM obra WHERE id_obra IN (SELECT fk_Obra_id_obra FROM bens_imoveis)'
         keys = ['nome', 'artista_original', 'movimento_artistico']
         # Construir a cláusula WHERE com base nos filtros
         where_conditions = []
