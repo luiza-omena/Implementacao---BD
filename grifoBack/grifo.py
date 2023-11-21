@@ -1,4 +1,3 @@
-import datetime
 import http.server
 import socketserver
 import json
@@ -58,14 +57,12 @@ def get_obras(**filters):
 
         # Construir a query SQL base
         query = 'SELECT * FROM Obra'
-        keys = ['nome', 'artista_original']
+        keys = ['nome', 'artista_original', 'movimento_artistico']
         # Construir a cláusula WHERE com base nos filtros
         where_conditions = []
-        print(filters.items())
-        for value in filters.items():
-            where_conditions.append(f"nome LIKE '%{value[1]}%'")
-        for value in filters.items():
-            where_conditions.append(f"artista_original LIKE '%{value[1]}%'")
+        for key in keys:
+            for value in filters.items():
+                where_conditions.append(f"{key} LIKE '%{value[1]}%'")
 
         # Adicionar a cláusula WHERE à query se houver filtros
         if where_conditions:
@@ -82,6 +79,64 @@ def get_obras(**filters):
         print(f"Erro ao obter obras: {e}")
         return []
 
+def get_bens_moveis(**filters):
+    try:
+        mydb = connect_db()
+        mycursor = mydb.cursor(dictionary=True)
+
+        # Construir a query SQL base
+        query = 'SELECT * FROM obra WHERE id_obra IN (SELECT fk_Obra_id_obra FROM bens_moveis);'
+        keys = ['nome', 'artista_original', 'movimento_artistico']
+        # Construir a cláusula WHERE com base nos filtros
+        where_conditions = []
+        for key in keys:
+            for value in filters.items():
+                where_conditions.append(f"{key} LIKE '%{value[1]}%'")
+
+        # Adicionar a cláusula WHERE à query se houver filtros
+        if where_conditions:
+            query += ' AND ' + ' OR '.join(where_conditions)
+
+        print(query)
+        mycursor.execute(query)
+        obras = mycursor.fetchall()
+        mycursor.close()
+        mydb.close()
+
+        return obras
+    except Exception as e:
+        print(f"Erro ao obter obras: {e}")
+        return []
+    
+def get_bens_imoveis(**filters):
+    try:
+        mydb = connect_db()
+        mycursor = mydb.cursor(dictionary=True)
+
+        # Construir a query SQL base
+        query = 'SELECT * FROM obra WHERE id_obra IN (SELECT fk_Obra_id_obra FROM bens_imoveis);'
+        keys = ['nome', 'artista_original', 'movimento_artistico']
+        # Construir a cláusula WHERE com base nos filtros
+        where_conditions = []
+        for key in keys:
+            for value in filters.items():
+                where_conditions.append(f"{key} LIKE '%{value[1]}%'")
+
+        # Adicionar a cláusula WHERE à query se houver filtros
+        if where_conditions:
+            query += ' AND ' + ' OR '.join(where_conditions)
+
+        print(query)
+        mycursor.execute(query)
+        obras = mycursor.fetchall()
+        mycursor.close()
+        mydb.close()
+
+        return obras
+    except Exception as e:
+        print(f"Erro ao obter obras: {e}")
+        return []
+    
 def get_ficha(id):
     mydb = connect_db()
     mycursor = mydb.cursor(dictionary=True)
@@ -97,14 +152,34 @@ def get_ficha(id):
     mydb.close()
     return ficha
 
-def get_funcionarios():
-    mydb = connect_db()
-    mycursor = mydb.cursor(dictionary=True)
-    mycursor.execute('SELECT * FROM funcionario')
-    funcionarios = mycursor.fetchall()
-    mycursor.close()
-    mydb.close()
-    return funcionarios
+def get_funcionarios(**filters):
+    try:
+        mydb = connect_db()
+        mycursor = mydb.cursor(dictionary=True)
+
+        # Construir a query SQL base
+        query = 'SELECT * FROM funcionario'
+        keys = ['estado', 'nome', 'cidade', 'email']
+        # Construir a cláusula WHERE com base nos filtros
+        where_conditions = []
+        for key in keys:
+            for value in filters.items():
+                where_conditions.append(f"{key} LIKE '%{value[1]}%'")
+
+        # Adicionar a cláusula WHERE à query se houver filtros
+        if where_conditions:
+            query += ' WHERE ' + ' OR '.join(where_conditions)
+
+        print(query)
+        mycursor.execute(query)
+        funcionarios = mycursor.fetchall()
+        mycursor.close()
+        mydb.close()
+
+        return funcionarios
+    except Exception as e:
+        print(f"Erro ao obter funcionarios: {e}")
+        return []
 
 def get_clientes():
     mydb = connect_db()
@@ -377,10 +452,50 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
             # Envie a resposta JSON
             self._set_headers(200)
             self.wfile.write(json.dumps(obras).encode())
-        elif self.path == '/funcionarios':
+        elif self.path.startswith('/bens-moveis'):
+            # Parse os parâmetros da URL
+            parsed_url = urlparse(self.path)
+            query_params = parse_qs(parsed_url.query)
+            print(query_params)
+            # Converter os valores de lista para strings (se necessário)
+            filters = {key: value[0] for key, value in query_params.items()}
+            print(filters)
+            # Sua lógica de negócios com os filtros
+            obras = get_bens_moveis(**filters)
+
+            # Envie a resposta JSON
             self._set_headers(200)
-            funcionarios = get_funcionarios()
+            self.wfile.write(json.dumps(obras).encode())
+
+        elif self.path.startswith('/bens-imoveis'):
+            # Parse os parâmetros da URL
+            parsed_url = urlparse(self.path)
+            query_params = parse_qs(parsed_url.query)
+            print(query_params)
+            # Converter os valores de lista para strings (se necessário)
+            filters = {key: value[0] for key, value in query_params.items()}
+            print(filters)
+            # Sua lógica de negócios com os filtros
+            obras = get_bens_imoveis(**filters)
+
+            # Envie a resposta JSON
+            self._set_headers(200)
+            self.wfile.write(json.dumps(obras).encode())
+        elif  self.path.startswith('/funcionarios'):
+            # Parse os parâmetros da URL
+            parsed_url = urlparse(self.path)
+            query_params = parse_qs(parsed_url.query)
+            print(query_params)
+            # Converter os valores de lista para strings (se necessário)
+            filters = {key: value[0] for key, value in query_params.items()}
+            print(filters)
+            # Sua lógica de negócios com os filtros
+            funcionarios = get_funcionarios(**filters)
+
+            # Envie a resposta JSON
+            self._set_headers(200)
             self.wfile.write(json.dumps(funcionarios).encode())
+
         elif self.path == '/clientes':
             self._set_headers(200)
             clientes = get_clientes()

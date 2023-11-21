@@ -67,7 +67,7 @@ const FuncionarioModal = () => {
         <>  
             <div className='w-[700px] h-[550px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 fixed z-[3] bg-white font-Helvetica rounded-[14px] border-grey3'>
             <CloseOutlined style={{marginLeft: "650px", fontSize:"20px", color:"#DAA520"}} onClick={() => setFuncionarioModal(false)}/>
-            <h2 className='text-[#DAA520] text-4xl font-Inter font-semibold ml-4 cursor-default'>Adicionar Ficha Técnica</h2>
+            <h2 className='text-[#DAA520] text-4xl font-Inter font-semibold ml-4 cursor-default'>Adicionar Funcionário</h2>
             <div className=''>
                 <form onSubmit={handleSubmit}>
                 <div className='mx-8 mt-4 cursor-default'>

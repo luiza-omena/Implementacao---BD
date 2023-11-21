@@ -11,16 +11,54 @@ import { useNavigate } from "react-router-dom";
 import BemMovel from "../BensModal/BensMoveis";
 import BemImovel from "../BensModal/BensImoveis";
 import { FilterTag, SearchInput } from "../Filter/Filter";
-import { boolean } from "yup";
+import Checkbox from "../Filter/CheckBox";
 
 export const Paintings = () => {
   const { openUserCredentialsModal, setPostObraModal, postObraModal, setObraId, bemImovel, bemMovel, newObra } = useContext(HomeContext)
   const [obras, setObras] = useState<Obra[]>([])
   const [ activeFilters, setActiveFilters ] = useState<string[]>([])
-  const [ active, setActive ] = useState<boolean>(false)
   const auth = useAuth();
   const navigate = useNavigate();
+  const [isChecked, setIsChecked] = useState(true);
+  const [isCheckedMovel, setIsCheckedMovel] = useState(false);
+  const [isCheckedImovel, setIsCheckedImovel] = useState(false);
 
+  const handleCheckboxAll = () => {
+    function check(){
+      setIsChecked(!isChecked);
+      if(isCheckedMovel || isCheckedImovel){
+        setIsCheckedMovel(false)
+        setIsCheckedImovel(false)
+      }
+    }
+    check()
+    handleEffect()
+  };
+
+  const handleCheckboxMovel = () => {
+    function checkMovel(){
+      setIsCheckedMovel(!isCheckedMovel);
+      if(isCheckedImovel || isChecked){
+        setIsChecked(false)
+        setIsCheckedImovel(false)
+      }
+    }
+    checkMovel()
+    handleEffect()
+  };
+
+  const handleCheckboxIMovel = () => {
+    function checkImovel() {
+      setIsCheckedImovel(!isCheckedImovel);
+      if(isCheckedMovel || isChecked){
+        setIsChecked(false)
+        setIsCheckedMovel(false)
+      }
+    }
+    checkImovel()
+    handleEffect()
+  };
+  
   const handlePost = () => {
     setPostObraModal(true);
   }
@@ -41,6 +79,42 @@ export const Paintings = () => {
     handleEffect()
 	};
 
+  async function fetchMovel() {
+    try {
+      // Construa a URL com os parâmetros apenas se houver filtros definidos
+      const url =
+        activeFilters.length > 0
+          ? `bens-moveis?${activeFilters.map(filter => `filter=${filter}`).join('&')}`
+          : 'bens-moveis';
+
+      // Faça a requisição GET com a URL construída
+      const response = await Api.get(url);
+
+      // Faça algo com a resposta, como definir o estado (setObras)
+      setObras(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function fetchImovel() {
+    try {
+      // Construa a URL com os parâmetros apenas se houver filtros definidos
+      const url =
+        activeFilters.length > 0
+          ? `bens-imoveis?${activeFilters.map(filter => `filter=${filter}`).join('&')}`
+          : 'bens-imoveis';
+
+      // Faça a requisição GET com a URL construída
+      const response = await Api.get(url);
+
+      // Faça algo com a resposta, como definir o estado (setObras)
+      setObras(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function deleteObra(obraId: number | null) {
     try {
       const response = await Api.delete(`delete-obra/${obraId}`);
@@ -50,15 +124,6 @@ export const Paintings = () => {
       }, 100);
     } catch (error) {
       console.error(error);
-    }
-  }
-
-  async function fetchData() {
-    try {
-      const response = await Api.get("obras");
-      setObras(response.data);
-    } catch (error) {
-      console.log(error);
     }
   }
   
@@ -81,12 +146,17 @@ export const Paintings = () => {
   }
   
   function handleEffect() {
-      fetchFilter();
+    if(isCheckedMovel){
+      fetchMovel();
+    } else if (isCheckedImovel){
+      fetchImovel()
+    } else if (isChecked){
+      fetchFilter()
+    }
   }
   
   useEffect(() => {
     handleEffect();
-    // Adicione qualquer outra lógica que você queira executar no useEffect aqui
   }, [activeFilters, setObras]);
       
   return (
@@ -98,6 +168,11 @@ export const Paintings = () => {
               <FilterTag key={index} value={filterValue} onClick={() => clearFilter(index)} />	
 						)} 
 						<SearchInput onChange={addFilter} placeholder="Procure a obra"/>
+        </div>
+        <div className="flex flex-col mr-32">
+          <Checkbox onChange={handleCheckboxAll} label="Todas" isChecked={isChecked}/>
+          <Checkbox onChange={handleCheckboxMovel} label="Filtrar por bens móveis" isChecked={isCheckedMovel}/>
+          <Checkbox onChange={handleCheckboxIMovel} label="Filtrar por bens imóveis" isChecked={isCheckedImovel}/>
         </div>
         {auth.email && 
         <div onClick={handlePost} className="mr-20 mt-2 flex justify-between items-center w-32 font-Inter bg-grey1 rounded-lg border border-grey1 hover:bg-[#DAA520]">
