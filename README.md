@@ -57,7 +57,7 @@ Para executar o projeto, certifique-se de ter o Node.js e o npm instalados no se
 
 
 **Nota:** Nota: Antes de começar, certifique-se de ter o Python instalado em sua máquina. O código do backend é desenvolvido em Python, e você pode baixar a versão mais recente em https://www.python.org/. Certifique-se também de adicionar o Python ao PATH durante a instalação.
-### backend(grifoBack)
+### Backend(grifoBack)
 
 1. **Clone este repositório:**
    ```bash
