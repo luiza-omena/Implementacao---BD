@@ -69,7 +69,7 @@ Para executar o projeto, certifique-se de ter o Node.js e o npm instalados no se
 3. Inicie o servidor de desenvolvimento:
    python grifo.py
 
-## Conexão com o Banco de Dados
+### Conexão com o Banco de Dados
 
 Para estabelecer uma conexão com o banco de dados MySQL,coloque suas informações do banco de dados na seguinte função em Python:
 
