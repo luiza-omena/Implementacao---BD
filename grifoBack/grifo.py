@@ -12,7 +12,7 @@ ALGORITHM = 'HS256'
 
 def connect_db():
     mydb = mysql.connector.connect(
-        host="localhost",
+        host="db",
         user="root",
         password="omena222",
         database="grifo"

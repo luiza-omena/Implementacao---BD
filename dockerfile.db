@@ -1,0 +1,5 @@
+# Usando a imagem oficial do MySQL
+FROM mysql:5.7
+
+# Copiando arquivos de inicialização SQL para dentro do container (ajuste o diretório conforme necessário)
+COPY ./sql_scripts/*.sql /docker-entrypoint-initdb.d/

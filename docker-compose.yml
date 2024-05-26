@@ -1,28 +1,41 @@
 version: '3.8'
 services:
   db:
-    image: mysql:5.7
+    build:
+      context: .
+      dockerfile: dockerfile.db
     platform: linux/amd64
     volumes:
       - db-data:/var/lib/mysql
-      - .:/docker-entrypoint-initdb.d 
     environment:
-      MYSQL_ROOT_PASSWORD: omena222 
+      MYSQL_ROOT_PASSWORD: omena222
       MYSQL_DATABASE: grifo
     ports:
       - "3306:3306"
     restart: always
+    networks:
+      - app-network
 
   app:
-    build: ./grifoBack
+    build:
+      context: ./grifoBack
+      dockerfile: dockerfile
     ports:
       - "8080:8080"
     depends_on:
       - db
     environment:
-      - DATABASE_HOST=db
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=omena222
-      - DATABASE_NAME=grifo
+      DATABASE_HOST: db
+      DATABASE_USER: root
+      DATABASE_PASSWORD: omena222
+      DATABASE_NAME: grifo
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
 volumes:
   db-data:
+
