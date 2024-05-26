@@ -38,6 +38,21 @@ O site da Grifo é uma vitrine da expertise da empresa em restauração de arte,
 </p>
 
 ## Configuração do Projeto
+
+### Docker
+O projeto pode ser executado usando Docker Compose, o que simplifica a inicialização do ambiente de desenvolvimento, gerenciando tanto o backend quanto o frontend e o banco de dados de forma integrada.
+
+Pré-requisitos:
+Docker e Docker Compose instalados em sua máquina. Visite Docker para instruções de instalação.
+
+Inicie os serviços rodando:
+```bash
+docker-compose up --build
+```
+
+Este comando construirá e levantará todos os serviços definidos no arquivo docker-compose.yml, incluindo o backend, o frontend e o banco de dados. Não é necessário iniciar o servidor backend separadamente, pois ele será automaticamente gerenciado pelo Docker Compose.
+
+Abra seu navegador e acesse http://127.0.0.1:4173/
 ### Frontend(grifoFront)
 
 **Nota:** Antes de começar, certifique-se de ter o Node.js instalado em sua máquina. O React é construído sobre o Node.js, então, se você ainda não o tem, pode baixá-lo em [https://nodejs.org/](https://nodejs.org/). Escolha a versão "LTS" (Long-Term Support) para maior estabilidade. Além disso, é recomendável ter um editor de código, como o VSCode, para trabalhar com o código.
@@ -76,7 +91,7 @@ Para estabelecer uma conexão com o banco de dados MySQL,coloque suas informaç�
 ```python
 def connect_db():
     mydb = mysql.connector.connect(
-        host="localhost",
+        host="db",
         user="root",
         password="suaSenha",
         database="grifo"

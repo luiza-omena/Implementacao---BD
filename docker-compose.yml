@@ -10,6 +10,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: omena222
       MYSQL_DATABASE: grifo
+      MYSQL_ROOT_HOST: '%'
     ports:
       - "3306:3306"
     restart: always
@@ -29,6 +30,15 @@ services:
       DATABASE_USER: root
       DATABASE_PASSWORD: omena222
       DATABASE_NAME: grifo
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./grifoFront
+      dockerfile: dockerfile.frontend
+    ports:
+      - "4173:4173"
     networks:
       - app-network
 

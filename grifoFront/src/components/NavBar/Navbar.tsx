@@ -5,7 +5,6 @@ import { useContext } from 'react';
 import HomeProvider, { HomeContext } from '../../context/HomeContext';
 import { LockOutlined } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthProvider/useAuth';
-import { Button } from 'antd';
 import { AuthContext } from '../../context/AuthProvider';
 
 export const NavBar = () => {

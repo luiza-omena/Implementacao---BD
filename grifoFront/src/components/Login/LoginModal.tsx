@@ -1,6 +1,6 @@
 import { HomeContext } from "../../context/HomeContext";
 import { useContext, useEffect } from 'react';
-import { Button, Col, Form, Input, Row, message } from "antd"
+import { Col, Form, Input, Row, message } from "antd"
 import input from "antd/es/input";
 import { useAuth } from "../../context/AuthProvider/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -11,9 +11,6 @@ const LoginModal = () => {
     const { setOpenUserCredentialsModal } = useContext(HomeContext)
 	const auth = useAuth()
 	const navigate = useNavigate();
-	const handleClick = async () => {
-        setOpenUserCredentialsModal(false);
-	};
 
 	async function onFinish(values: {email:string, password: string}) {
 		try{

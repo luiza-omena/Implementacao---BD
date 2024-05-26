@@ -33,12 +33,9 @@ const PostObra = () => {
         setNewObra([obra])
 
 
-        let obraMovel: boolean;
         if(formData.tipoBem == "Bens_moveis"){
-            obraMovel = true
             setBemMovel(true)
         } else {
-            obraMovel = false
             setBemImovel(true)
         }
 
