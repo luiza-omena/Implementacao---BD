@@ -23,14 +23,12 @@ def authenticate_user(dados):
     mydb = connect_db()
     mycursor = mydb.cursor(dictionary=True)
 
-    # Consulta SQL para verificar se o email e a senha correspondem a um funcionário
-    query = '''SELECT * FROM funcionario WHERE email = %s AND senha = %s'''
+    query = '''SELECT * FROM Funcionario WHERE email = %s AND senha = %s'''
     values = (
         dados["email"], 
         dados["password"],
     )
 
-    print(values)
     try:
         mycursor.execute(query, values)
         funcionario = mycursor.fetchall()
@@ -55,20 +53,17 @@ def get_obras(**filters):
         mydb = connect_db()
         mycursor = mydb.cursor(dictionary=True)
 
-        # Construir a query SQL base
         query = 'SELECT * FROM Obra'
         keys = ['nome', 'artista_original', 'movimento_artistico', 'dimensoes']
-        # Construir a cláusula WHERE com base nos filtros
+
         where_conditions = []
         for key in keys:
             for value in filters.items():
                 where_conditions.append(f"{key} LIKE '%{value[1]}%'")
 
-        # Adicionar a cláusula WHERE à query se houver filtros
         if where_conditions:
             query += ' WHERE ' + ' OR '.join(where_conditions)
 
-        print(query)
         mycursor.execute(query)
         obras = mycursor.fetchall()
         mycursor.close()
@@ -84,20 +79,18 @@ def get_bens_moveis(**filters):
         mydb = connect_db()
         mycursor = mydb.cursor(dictionary=True)
 
-        # Construir a query SQL base
-        query = 'SELECT * FROM obra WHERE id_obra IN (SELECT fk_Obra_id_obra FROM bens_moveis)'
+        query = 'SELECT * FROM Obra WHERE id_obra IN (SELECT fk_Obra_id_obra FROM Bens_moveis)'
         keys = ['nome', 'artista_original', 'movimento_artistico']
-        # Construir a cláusula WHERE com base nos filtros
+
         where_conditions = []
         for key in keys:
             for value in filters.items():
                 where_conditions.append(f"{key} LIKE '%{value[1]}%'")
 
-        # Adicionar a cláusula WHERE à query se houver filtros
+
         if where_conditions:
             query += ' AND ' + ' OR '.join(where_conditions)
 
-        print(query)
         mycursor.execute(query)
         obras = mycursor.fetchall()
         mycursor.close()
@@ -113,20 +106,17 @@ def get_bens_imoveis(**filters):
         mydb = connect_db()
         mycursor = mydb.cursor(dictionary=True)
 
-        # Construir a query SQL base
-        query = 'SELECT * FROM obra WHERE id_obra IN (SELECT fk_Obra_id_obra FROM bens_imoveis)'
+        query = 'SELECT * FROM Obra WHERE id_obra IN (SELECT fk_Obra_id_obra FROM Bens_imoveis)'
         keys = ['nome', 'artista_original', 'movimento_artistico']
-        # Construir a cláusula WHERE com base nos filtros
+
         where_conditions = []
         for key in keys:
             for value in filters.items():
                 where_conditions.append(f"{key} LIKE '%{value[1]}%'")
 
-        # Adicionar a cláusula WHERE à query se houver filtros
         if where_conditions:
             query += ' AND ' + ' OR '.join(where_conditions)
 
-        print(query)
         mycursor.execute(query)
         obras = mycursor.fetchall()
         mycursor.close()
@@ -157,20 +147,17 @@ def get_funcionarios(**filters):
         mydb = connect_db()
         mycursor = mydb.cursor(dictionary=True)
 
-        # Construir a query SQL base
-        query = 'SELECT * FROM funcionario'
+        query = 'SELECT * FROM Funcionario'
         keys = ['estado', 'nome', 'cidade', 'email']
-        # Construir a cláusula WHERE com base nos filtros
+
         where_conditions = []
         for key in keys:
             for value in filters.items():
                 where_conditions.append(f"{key} LIKE '%{value[1]}%'")
 
-        # Adicionar a cláusula WHERE à query se houver filtros
         if where_conditions:
-            query += ' WHERE ' + ' OR '.join(where_conditions)
+            query += ' WHERE '+ 'OR '.join(where_conditions)
 
-        print(query)
         mycursor.execute(query)
         funcionarios = mycursor.fetchall()
         mycursor.close()
@@ -184,7 +171,7 @@ def get_funcionarios(**filters):
 def get_clientes():
     mydb = connect_db()
     mycursor = mydb.cursor(dictionary=True)
-    mycursor.execute('SELECT * FROM cliente')
+    mycursor.execute('SELECT * FROM Cliente')
     clientes = mycursor.fetchall()
     mycursor.close()
     mydb.close()
@@ -246,7 +233,7 @@ def insert_obra(dados):
 def insert_restauracao(obra_id):
     mydb = connect_db()
     mycursor = mydb.cursor(dictionary=True)
-    employees_query = "SELECT fk_Funcionario_id_funcionario FROM restaurador ORDER BY RAND() LIMIT 1"
+    employees_query = "SELECT fk_Funcionario_id_funcionario FROM Restaurador ORDER BY RAND() LIMIT 1"
     mycursor.execute(employees_query)
     employee = mycursor.fetchone()
 
@@ -254,7 +241,7 @@ def insert_restauracao(obra_id):
     mycursor.execute(budgets_query)
     budget = mycursor.fetchone()
 
-    query_restauracao = '''INSERT INTO restaura_obra_restaurador_orcamento (fk_Obra_id, fk_id_restaurador, fk_cod_orcamento)
+    query_restauracao = '''INSERT INTO Restaura_Obra_Restaurador_Orcamento (fk_Obra_id, fk_id_restaurador, fk_cod_orcamento)
                           VALUES (%s, %s, %s)'''
     values_restauracao = (
         obra_id,
@@ -273,11 +260,9 @@ def insert_ficha(dados):
     data_inicio_obra_str = ficha_data["data_inicio_obra"]
     data_termino_obra_str = ficha_data["data_termino_obra"]
 
-    # Usar dateutil.parser para converter as strings para objetos datetime
     data_inicio_obra_dt = parser.parse(data_inicio_obra_str)
     data_termino_obra_dt = parser.parse(data_termino_obra_str)
 
-    # Formatar as datas no formato 'YYYY-MM-DD'
     data_inicio_obra_formatada = data_inicio_obra_dt.strftime('%Y-%m-%d')
     data_termino_obra_formatada = data_termino_obra_dt.strftime('%Y-%m-%d')
     id_obra = dados["id"]
@@ -289,7 +274,6 @@ def insert_ficha(dados):
 
     if resultado:
         fk_id_restauracao = resultado['id_restauracao']
-        print(ficha_data)
         query_inserir_ficha_tecnica = '''INSERT INTO Ficha_tecnica(data_inicio_obra, data_termino_obra, analise, empresa_prestadora_de_servico, descricao, tecnica_restauracao, fk_id_restauracao)
                                         VALUES (%s, %s, %s, %s, %s, %s, %s)'''
         values = (
@@ -318,9 +302,6 @@ def update_ficha(id, campo, novo_valor):
         mydb = connect_db()
         mycursor = mydb.cursor(dictionary=True)
 
-        print(id)
-        print(campo)
-        print(novo_valor)
         query = f'''
             UPDATE Ficha_tecnica
             SET {campo} = %s
@@ -344,7 +325,7 @@ def insert_funcionario(dados):
     mydb = connect_db()
     mycursor = mydb.cursor(dictionary=True)
 
-    query_obter_pk = "SELECT telefone_Pk FROM telefone_funcionario ORDER BY RAND() LIMIT 1"
+    query_obter_pk = "SELECT telefone_Pk FROM Telefone_funcionario ORDER BY RAND() LIMIT 1"
     mycursor.execute(query_obter_pk)
 
     telefone_pk_dados = mycursor.fetchone()
@@ -372,7 +353,6 @@ def insert_funcionario(dados):
         salario
     )
 
-    print(values)
     try:
         mycursor.execute(query_inserir_funcionario, values)
         mydb.commit()  
@@ -391,7 +371,6 @@ def delete_obra(id_obra):
     mycursor = mydb.cursor()
 
     try:
-        # Comando para deletar a obra
         delete_query = "DELETE FROM Obra WHERE id_obra = %s"
         mycursor.execute(delete_query, (id_obra,))
         mydb.commit()
@@ -439,60 +418,37 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path.startswith('/obras'):
-            # Parse os parâmetros da URL
             parsed_url = urlparse(self.path)
             query_params = parse_qs(parsed_url.query)
-            print(query_params)
-            # Converter os valores de lista para strings (se necessário)
             filters = {key: value[0] for key, value in query_params.items()}
-            print(filters)
-            # Sua lógica de negócios com os filtros
             obras = get_obras(**filters)
-
-            # Envie a resposta JSON
             self._set_headers(200)
             self.wfile.write(json.dumps(obras).encode())
+
         elif self.path.startswith('/bens-moveis'):
-            # Parse os parâmetros da URL
             parsed_url = urlparse(self.path)
             query_params = parse_qs(parsed_url.query)
-            print(query_params)
-            # Converter os valores de lista para strings (se necessário)
             filters = {key: value[0] for key, value in query_params.items()}
-            print(filters)
-            # Sua lógica de negócios com os filtros
             obras = get_bens_moveis(**filters)
 
-            # Envie a resposta JSON
             self._set_headers(200)
             self.wfile.write(json.dumps(obras).encode())
 
         elif self.path.startswith('/bens-imoveis'):
-            # Parse os parâmetros da URL
             parsed_url = urlparse(self.path)
             query_params = parse_qs(parsed_url.query)
-            print(query_params)
-            # Converter os valores de lista para strings (se necessário)
             filters = {key: value[0] for key, value in query_params.items()}
-            print(filters)
-            # Sua lógica de negócios com os filtros
             obras = get_bens_imoveis(**filters)
 
-            # Envie a resposta JSON
             self._set_headers(200)
             self.wfile.write(json.dumps(obras).encode())
+
         elif  self.path.startswith('/funcionarios'):
-            # Parse os parâmetros da URL
             parsed_url = urlparse(self.path)
             query_params = parse_qs(parsed_url.query)
-            print(query_params)
-            # Converter os valores de lista para strings (se necessário)
             filters = {key: value[0] for key, value in query_params.items()}
-            print(filters)
-            # Sua lógica de negócios com os filtros
             funcionarios = get_funcionarios(**filters)
 
-            # Envie a resposta JSON
             self._set_headers(200)
             self.wfile.write(json.dumps(funcionarios).encode())
 
@@ -500,6 +456,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
             self._set_headers(200)
             clientes = get_clientes()
             self.wfile.write(json.dumps(clientes).encode())
+
         elif self.path.startswith('/fichaTecnica/'):
             id = self.path.split('/')[-1]
             ficha = get_ficha(id)
@@ -519,7 +476,6 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
         if self.path == '/insert-obra':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
-            print(post_data)
             obra_data = json.loads(post_data)
             obra_id = insert_obra(obra_data)
             if obra_id:
@@ -536,7 +492,6 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
         elif self.path == '/insert-ficha':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
-            print(post_data)
             ficha_data = json.loads(post_data)
             ficha_id = insert_ficha(ficha_data)
             if ficha_id:
@@ -571,10 +526,8 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
             funcionario = authenticate_user(login_data)
             if funcionario:
-                # Se a autenticação for bem-sucedida, gere um token
                 token = str(len(funcionario[0]['nome']))
 
-                # Resposta bem-sucedida com o token
                 response_data = {
                     'status': 'success',
                     'message': 'Login bem-sucedido',
@@ -582,14 +535,12 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
                 }
                 self._set_headers(200)
             else:
-                # Resposta de autenticação falhada
                 response_data = {
                     'status': 'error',
                     'message': 'Credenciais inválidas'
                 }
                 self._set_headers(400)
 
-            # Envie a resposta como JSON
             self.wfile.write(json.dumps(response_data).encode())
 
         else:
@@ -600,8 +551,6 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
             content_length = int(self.headers['Content-Length'])
             put_data = self.rfile.read(content_length)
             ficha_data = json.loads(put_data)
-            print(ficha_data)
-            # Substitua a função apropriada para atualizar a ficha (por exemplo, update_ficha)
             ficha_updated = update_ficha(ficha_data['idObra'],ficha_data['campo'], ficha_data['valor'])
             
             if ficha_updated:

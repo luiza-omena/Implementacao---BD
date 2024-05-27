@@ -11,6 +11,8 @@ services:
       MYSQL_ROOT_PASSWORD: omena222
       MYSQL_DATABASE: grifo
       MYSQL_ROOT_HOST: '%'
+      MYSQL_WAIT_TIMEOUT: 28800
+      MYSQL_INTERACTIVE_TIMEOUT: 28800
     ports:
       - "3306:3306"
     restart: always

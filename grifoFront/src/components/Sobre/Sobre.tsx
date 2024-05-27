@@ -7,7 +7,7 @@ const Sobre = () => {
   const { openUserCredentialsModal } = useContext(HomeContext)
   return (
     <div className='flex flex-col justify-between'>
-        <div className="landing h-80 flex justify-center container">
+        <div className="landing h-80 flex justify-center">
             <a className="text-grey1 text-4xl font-Inter font-bold mt-32 cursor-default"> Grifo Diagnóstico e Preservação de Bens Culturais </a>
         </div>
         <div className=''>

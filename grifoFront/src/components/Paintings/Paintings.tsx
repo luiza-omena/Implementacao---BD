@@ -24,40 +24,35 @@ export const Paintings = () => {
   const [isCheckedImovel, setIsCheckedImovel] = useState(false);
 
   const handleCheckboxAll = () => {
-    function check(){
-      setIsChecked(!isChecked);
-      if(isCheckedMovel || isCheckedImovel){
-        setIsCheckedMovel(false)
-        setIsCheckedImovel(false)
-      }
-    }
-    check()
-    handleEffect()
+    setIsChecked(prev => {
+      const newState = !prev;
+      setIsCheckedMovel(false);
+      setIsCheckedImovel(false);
+      return newState;
+    });
   };
-
+  
   const handleCheckboxMovel = () => {
-    function checkMovel(){
-      setIsCheckedMovel(!isCheckedMovel);
-      if(isCheckedImovel || isChecked){
-        setIsChecked(false)
-        setIsCheckedImovel(false)
-      }
-    }
-    checkMovel()
-    handleEffect()
+    setIsCheckedMovel(prev => {
+      const newState = !prev;
+      setIsChecked(false);
+      setIsCheckedImovel(false);
+      return newState;
+    });
+  };
+  
+  const handleCheckboxIMovel = () => {
+    setIsCheckedImovel(prev => {
+      const newState = !prev;
+      setIsChecked(false);
+      setIsCheckedMovel(false);
+      return newState;
+    });
   };
 
-  const handleCheckboxIMovel = () => {
-    function checkImovel() {
-      setIsCheckedImovel(!isCheckedImovel);
-      if(isCheckedMovel || isChecked){
-        setIsChecked(false)
-        setIsCheckedMovel(false)
-      }
-    }
-    checkImovel()
-    handleEffect()
-  };
+  useEffect(() => {
+    handleEffect();
+  }, [isChecked, isCheckedMovel, isCheckedImovel]);
   
   const handlePost = () => {
     setPostObraModal(true);

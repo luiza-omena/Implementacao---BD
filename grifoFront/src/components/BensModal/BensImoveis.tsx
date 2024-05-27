@@ -139,7 +139,7 @@ const BemImovel = (props: {values: Obra[], obraMovel: boolean}) => {
                     </div>
 
                     <div className='w-32 rounded-full border-2 border-[#DAA520] text-[#DAA520] flex justify-center font-semibold text-xl font-Inter mt-4 ml-[43%]'>
-                        <button type="submit">Adicionar</button>
+                        <button type="submit">Enviar</button>
                     </div>
                 </form>
                 </div>
